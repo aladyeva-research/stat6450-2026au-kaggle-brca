@@ -1,0 +1,92 @@
+---
+title: "Clinic Data Overview"
+author: "Katya Aladyeva"
+format: html
+editor: visual
+---
+
+## Kaggle Breast Cancer Project
+
+```{r}
+setwd('/Users/aladyeva.e/Library/CloudStorage/GoogleDrive-aladyeva.ekaterina@gmail.com/My Drive/OSU/PhD/Classes/STAT6450/Project/Kaggle_Breast_Cancer')
+```
+
+```{r}
+suppressPackageStartupMessages(
+  library(dplyr)
+)
+```
+
+```{r}
+#! label: "get-data"
+clinical_data <- read.csv("data/Clinical_Demographic_Data.csv")
+treatment_data <- read.csv("data/Clinical_Treatment_Data.csv")
+```
+
+```{r}
+colnames(clinical_data)
+```
+
+```{r}
+colnames(treatment_data)
+```
+
+
+### Cancer subtype statistics
+```{r}
+treatment_data$cancer_subtype <- case_when(((treatment_data$er_status_by_ihc == "Positive") | (treatment_data$pr_status_by_ihc == "Positive")) & (treatment_data$her2_status_by_ihc == "Positive") ~ "HR+/HER2+",
+                                        ((treatment_data$er_status_by_ihc == "Positive") | (treatment_data$pr_status_by_ihc == "Positive")) & (treatment_data$her2_status_by_ihc == "Negative") ~ "HR+/HER2-",
+                                        treatment_data$her2_status_by_ihc == "Positive" ~ "HER2+(HR-)",
+                                        (treatment_data$er_status_by_ihc == "Negative") & (treatment_data$pr_status_by_ihc == "Negative") & (treatment_data$her2_status_by_ihc == "Negative") ~ "TNBC",
+                                        .default = "Unknown")
+```
+
+```{r}
+table(treatment_data$er_status_by_ihc)
+```
+
+
+```{r}
+table(treatment_data$er_status_by_ihc, treatment_data$pr_status_by_ihc)
+```
+
+```{r}
+table(treatment_data$cancer_subtype)
+```
+
+
+```{r}
+hr_her2_treatment_data <- treatment_data %>% filter(cancer_subtype %in% c("HR+/HER2-", "HR+/HER2+"))
+```
+
+
+```{r}
+merged_data <- clinical_data %>% 
+  inner_join(hr_her2_treatment_data, 
+            by = c("Patient_ID"="bcr_patient_barcode"), 
+            suffix = c("_clinic","_treat"))
+```
+
+```{r}
+hr_her2_treatment_data %>% left_join(clinical_data, , 
+            by = c("bcr_patient_barcode" = "Patient_ID"), 
+            suffix = c("_clinic","_treat")) %>% filter(is.na(primary_site))
+```
+
+
+```{r}
+table(merged_data$cancer_subtype)
+```
+
+```{r}
+table(merged_data$er_status_by_ihc)
+```
+
+
+```{r}
+table(merged_data$er_status_by_ihc, merged_data$pr_status_by_ihc)
+```
+
+
+
+
