@@ -111,32 +111,57 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="kaggle-breast-cancer-project" class="level2">
-<h2 class="anchored" data-anchor-id="kaggle-breast-cancer-project">Kaggle Breast Cancer Project</h2>
+<section id="kaggle-breast-cancer-project" class="level1">
+<h1>Kaggle Breast Cancer Project</h1>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">'/Users/aladyeva.e/Library/CloudStorage/GoogleDrive-aladyeva.ekaterina@gmail.com/My Drive/OSU/PhD/Classes/STAT6450/Project/Kaggle_Breast_Cancer'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(dplyr)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(stringr)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(naniar)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#! label: "get-data"</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>clinical_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Clinical_Demographic_Data.csv"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>treatment_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Clinical_Treatment_Data.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<section id="cancer-subtype-statistics" class="level3">
-<h3 class="anchored" data-anchor-id="cancer-subtype-statistics">Cancer subtype statistics</h3>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>treatment_data<span class="sc">$</span>cancer_subtype <span class="ot">&lt;-</span> <span class="fu">case_when</span>(((treatment_data<span class="sc">$</span>er_status_by_ihc <span class="sc">==</span> <span class="st">"Positive"</span>) <span class="sc">|</span> (treatment_data<span class="sc">$</span>pr_status_by_ihc <span class="sc">==</span> <span class="st">"Positive"</span>)) <span class="sc">&amp;</span> (treatment_data<span class="sc">$</span>her2_status_by_ihc <span class="sc">==</span> <span class="st">"Positive"</span>) <span class="sc">~</span> <span class="st">"HR+/HER2+"</span>,</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                                        ((treatment_data<span class="sc">$</span>er_status_by_ihc <span class="sc">==</span> <span class="st">"Positive"</span>) <span class="sc">|</span> (treatment_data<span class="sc">$</span>pr_status_by_ihc <span class="sc">==</span> <span class="st">"Positive"</span>)) <span class="sc">&amp;</span> (treatment_data<span class="sc">$</span>her2_status_by_ihc <span class="sc">==</span> <span class="st">"Negative"</span>) <span class="sc">~</span> <span class="st">"HR+/HER2-"</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                                        treatment_data<span class="sc">$</span>her2_status_by_ihc <span class="sc">==</span> <span class="st">"Positive"</span> <span class="sc">~</span> <span class="st">"HER2+(HR-)"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                                        (treatment_data<span class="sc">$</span>er_status_by_ihc <span class="sc">==</span> <span class="st">"Negative"</span>) <span class="sc">&amp;</span> (treatment_data<span class="sc">$</span>pr_status_by_ihc <span class="sc">==</span> <span class="st">"Negative"</span>) <span class="sc">&amp;</span> (treatment_data<span class="sc">$</span>her2_status_by_ihc <span class="sc">==</span> <span class="st">"Negative"</span>) <span class="sc">~</span> <span class="st">"TNBC"</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">.default =</span> <span class="st">"Unknown"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>treatment_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Clinical_Treatment_Data.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(treatment_data<span class="sc">$</span>cancer_subtype)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>all_meta_columns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(treatment_data)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>drug_columns <span class="ot">&lt;-</span> all_meta_columns[<span class="fu">grepl</span>(<span class="st">"^Drug"</span>,all_meta_columns)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>treatment_data<span class="sc">$</span>cancer_subtype <span class="ot">&lt;-</span> <span class="fu">case_when</span>(((treatment_data<span class="sc">$</span>er_status_by_ihc <span class="sc">==</span> <span class="st">"Positive"</span>) <span class="sc">|</span> (treatment_data<span class="sc">$</span>pr_status_by_ihc <span class="sc">==</span> <span class="st">"Positive"</span>)) <span class="sc">&amp;</span> (treatment_data<span class="sc">$</span>her2_status_by_ihc <span class="sc">==</span> <span class="st">"Positive"</span>) <span class="sc">~</span> <span class="st">"HR+/HER2+"</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                                        ((treatment_data<span class="sc">$</span>er_status_by_ihc <span class="sc">==</span> <span class="st">"Positive"</span>) <span class="sc">|</span> (treatment_data<span class="sc">$</span>pr_status_by_ihc <span class="sc">==</span> <span class="st">"Positive"</span>)) <span class="sc">&amp;</span> (treatment_data<span class="sc">$</span>her2_status_by_ihc <span class="sc">==</span> <span class="st">"Negative"</span>) <span class="sc">~</span> <span class="st">"HR+/HER2-"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                                        treatment_data<span class="sc">$</span>her2_status_by_ihc <span class="sc">==</span> <span class="st">"Positive"</span> <span class="sc">~</span> <span class="st">"HER2+(HR-)"</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                                        (treatment_data<span class="sc">$</span>er_status_by_ihc <span class="sc">==</span> <span class="st">"Negative"</span>) <span class="sc">&amp;</span> (treatment_data<span class="sc">$</span>pr_status_by_ihc <span class="sc">==</span> <span class="st">"Negative"</span>) <span class="sc">&amp;</span> (treatment_data<span class="sc">$</span>her2_status_by_ihc <span class="sc">==</span> <span class="st">"Negative"</span>) <span class="sc">~</span> <span class="st">"TNBC"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">.default =</span> <span class="st">"Unknown"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="cancer-subtype-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="cancer-subtype-statistics">Cancer subtype statistics</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(treatment_data<span class="sc">$</span>er_status_by_ihc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+              Indeterminate      Negative      Positive 
+           49             2           238           808 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(treatment_data<span class="sc">$</span>er_status_by_ihc, treatment_data<span class="sc">$</span>pr_status_by_ihc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               
+                    Indeterminate Negative Positive
+                 49             0        0        0
+  Indeterminate   0             0        1        1
+  Negative        1             1      220       16
+  Positive        0             3      123      682</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(treatment_data<span class="sc">$</span>cancer_subtype)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 HER2+(HR-)  HR+/HER2-  HR+/HER2+       TNBC    Unknown 
@@ -144,28 +169,300 @@ HER2+(HR-)  HR+/HER2-  HR+/HER2+       TNBC    Unknown
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>merged_data <span class="ot">&lt;-</span> clinical_data <span class="sc">%&gt;%</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(treatment_data, </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"Patient_ID"</span><span class="ot">=</span><span class="st">"bcr_patient_barcode"</span>), </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">"_clinic"</span>,<span class="st">"_treat"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>hr_her2_treatment_data <span class="ot">&lt;-</span> treatment_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(cancer_subtype <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"HR+/HER2-"</span>, <span class="st">"HR+/HER2+"</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(hr_her2_treatment_data, <span class="st">"data/hr_her2_cancer_subset.tsv"</span>, <span class="at">sep=</span><span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">quote =</span> F, <span class="at">row.names =</span> F)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="features-qc" class="level2">
+<h2 class="anchored" data-anchor-id="features-qc">Features QC</h2>
+<section id="missing-values-per-column" class="level3">
+<h3 class="anchored" data-anchor-id="missing-values-per-column">Missing values per column</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>hr_her2_treatment_data <span class="ot">&lt;-</span> hr_her2_treatment_data <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character), str_trim))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>hr_her2_treatment_data[hr_her2_treatment_data <span class="sc">==</span> <span class="st">""</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(merged_data<span class="sc">$</span>cancer_subtype)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>missing_values <span class="ot">&lt;-</span> <span class="fu">colSums</span>(<span class="fu">is.na</span>(hr_her2_treatment_data))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>missing_props <span class="ot">&lt;-</span> <span class="fu">round</span>(missing_values<span class="sc">/</span><span class="fu">nrow</span>(hr_her2_treatment_data)<span class="sc">*</span><span class="dv">100</span>,<span class="dv">2</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>columns_with_missing <span class="ot">&lt;-</span> <span class="fu">names</span>(missing_props[missing_props <span class="sc">&gt;</span> <span class="dv">0</span>])</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>missing_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">values =</span> missing_values, <span class="at">props =</span> missing_props)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>missing_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(props<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(props))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-HER2+(HR-)  HR+/HER2-  HR+/HER2+       TNBC    Unknown 
-         3         55         13         10         41 </code></pre>
+<pre><code>                              values props
+micromet_detection_by_ihc        229 40.11
+her2_ihc_score                   225 39.40
+lymph_nodes_examined             212 37.13
+axillary_staging_method          155 27.15
+ethnicity                        127 22.24
+lymph_nodes_examined_he_count    107 18.74
+lymph_nodes_examined_count        95 16.64
+method_initial_path_dx            87 15.24
+race                              82 14.36
+ajcc_staging_edition              74 12.96
+tumor_status                      69 12.08
+menopause_status                  46  8.06
+last_contact_days_to              33  5.78
+margin_status                     31  5.43
+surgical_procedure_first          30  5.25
+Age_in_Years                       9  1.58
+ajcc_pathologic_tumor_stage        4  0.70
+prospective_collection             2  0.35
+retrospective_collection           2  0.35
+history_neoadjuvant_treatment      1  0.18
+initial_pathologic_dx_year         1  0.18</code></pre>
+</div>
+</div>
+</section>
+<section id="zero-variance-columns" class="level3">
+<h3 class="anchored" data-anchor-id="zero-variance-columns">Zero variance columns</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count unique values per column (ignoring NAs)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>unique_counts <span class="ot">&lt;-</span> <span class="fu">sapply</span>(hr_her2_treatment_data, <span class="cf">function</span>(x) <span class="fu">length</span>(<span class="fu">unique</span>(<span class="fu">na.omit</span>(x))))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify columns with 1 or fewer unique values</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>zero_variance_cols <span class="ot">&lt;-</span> <span class="fu">names</span>(unique_counts[unique_counts <span class="sc">&lt;=</span> <span class="dv">1</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="quasi-complete-columns" class="level3">
+<h3 class="anchored" data-anchor-id="quasi-complete-columns">Quasi-complete columns</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>her2_pos_subset <span class="ot">&lt;-</span> hr_her2_treatment_data[hr_her2_treatment_data<span class="sc">$</span>cancer_subtype <span class="sc">==</span> <span class="st">"HR+/HER2+"</span>,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                                          <span class="sc">!</span>(<span class="fu">names</span>(hr_her2_treatment_data) <span class="sc">%in%</span> zero_variance_cols)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>unique_counts <span class="ot">&lt;-</span> <span class="fu">sapply</span>(her2_pos_subset, <span class="cf">function</span>(x) <span class="fu">length</span>(<span class="fu">unique</span>(<span class="fu">na.omit</span>(x))))</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify columns with 1 or fewer unique values</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>zero_variance_cols_pos <span class="ot">&lt;-</span> <span class="fu">names</span>(unique_counts[unique_counts <span class="sc">&lt;=</span> <span class="dv">1</span>])</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>zero_variance_cols_pos</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "her2_status_by_ihc"                                  
+ [2] "Drug_5.Flourouracil"                                 
+ [3] "Drug_ANASTROZOLE"                                    
+ [4] "Drug_ANASTROZOLE..ARIMIDEX."                         
+ [5] "Drug_Adriamyicin"                                    
+ [6] "Drug_Adrimycin"                                      
+ [7] "Drug_Anastrazole"                                    
+ [8] "Drug_Aromasin..Exemestane."                          
+ [9] "Drug_Avastin"                                        
+[10] "Drug_BEVACIZUMAB"                                    
+[11] "Drug_BEVACIZUMAB..AVASTIN..PLACEBO.PROVIDED.BY.STUDY"
+[12] "Drug_Bevacizumab"                                    
+[13] "Drug_CAPECITABINE"                                   
+[14] "Drug_Clodronate"                                     
+[15] "Drug_Cyclophospamide"                                
+[16] "Drug_Cyotxan"                                        
+[17] "Drug_Cytoxen"                                        
+[18] "Drug_Denosumab"                                      
+[19] "Drug_Doxetaxel"                                      
+[20] "Drug_Doxorubicin.Liposome"                           
+[21] "Drug_Doxorubicinum"                                  
+[22] "Drug_E.75"                                           
+[23] "Drug_EXEMESTANE..AROMASIN."                          
+[24] "Drug_FEMARA"                                         
+[25] "Drug_FLUOROURACIL"                                   
+[26] "Drug_FULVESTRANT"                                    
+[27] "Drug_Fulvestrant"                                    
+[28] "Drug_Gemcitabine"                                    
+[29] "Drug_Gemzar"                                         
+[30] "Drug_Goserelin"                                      
+[31] "Drug_Hormone..NOS"                                   
+[32] "Drug_Ibandronate"                                    
+[33] "Drug_LETROZOLE..FEMARA."                             
+[34] "Drug_LEUPROLIDE.ACETATE..LUPRON."                    
+[35] "Drug_LUPRON"                                         
+[36] "Drug_Letrozole..Femara."                             
+[37] "Drug_METHOTREXATE"                                   
+[38] "Drug_Mitomycin"                                      
+[39] "Drug_Nolvadex"                                       
+[40] "Drug_Pamidronate"                                    
+[41] "Drug_Prednisone"                                     
+[42] "Drug_Rituximab"                                      
+[43] "Drug_TAMOXIFEN..NOVADEX."                            
+[44] "Drug_TAXOTERE"                                       
+[45] "Drug_Taxotere.Cytoxan"                               
+[46] "Drug_Tesetaxel"                                      
+[47] "Drug_Triptorelin"                                    
+[48] "Drug_Vincristine"                                    
+[49] "Drug_Vinorelbine"                                    
+[50] "Drug_Xgeva"                                          
+[51] "Drug_ZOLEDRONIC.ACID"                                
+[52] "Drug_Zoledronic.Acid"                                
+[53] "Drug_abraxane"                                       
+[54] "Drug_adriamicin"                                     
+[55] "Drug_adriamycin"                                     
+[56] "Drug_adriamycin.cuclophosphamide"                    
+[57] "Drug_adriamycin.cyclophosphamid"                     
+[58] "Drug_adrimicin.cyclophosphamide"                     
+[59] "Drug_adrimycin.cyclophosphamide"                     
+[60] "Drug_aromatase.exemestane"                           
+[61] "Drug_cyclophosphamid"                                
+[62] "Drug_cyclophosphamide.methotrexatum.fluorouracillum" 
+[63] "Drug_cyclophosphamidum"                              
+[64] "Drug_cytoxan"                                        
+[65] "Drug_doxorubicin.HCL"                                
+[66] "Drug_doxorubicine"                                   
+[67] "Drug_doxorubicine.cyclophosphamide.tamoxifen"        
+[68] "Drug_doxorubicine.cyclophosphamide"                  
+[69] "Drug_doxorubicine.cyclophosphamide.tamoxifen.1"      
+[70] "Drug_letrozolum"                                     
+[71] "Drug_nolvadex"                                       
+[72] "Drug_tamoxiphen.anastrazolum"                        
+[73] "Drug_tamoxiphene"                                    
+[74] "Drug_tamoxiphene.anastrozolum"                       
+[75] "Drug_tc"                                             
+[76] "cancer_subtype"                                      </code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(merged_data<span class="sc">$</span>er_status_by_ihc, merged_data<span class="sc">$</span>pr_status_by_ihc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>her2_neg_subset <span class="ot">&lt;-</span> hr_her2_treatment_data[hr_her2_treatment_data<span class="sc">$</span>cancer_subtype <span class="sc">==</span> <span class="st">"HR+/HER2-"</span>,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                                          <span class="sc">!</span>(<span class="fu">names</span>(hr_her2_treatment_data) <span class="sc">%in%</span> <span class="fu">c</span>(zero_variance_cols,zero_variance_cols_pos))]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>unique_counts <span class="ot">&lt;-</span> <span class="fu">sapply</span>(her2_neg_subset, <span class="cf">function</span>(x) <span class="fu">length</span>(<span class="fu">unique</span>(<span class="fu">na.omit</span>(x))))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify columns with 1 or fewer unique values</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>zero_variance_cols_neg <span class="ot">&lt;-</span> <span class="fu">names</span>(unique_counts[unique_counts <span class="sc">&lt;=</span> <span class="dv">1</span>])</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>zero_variance_cols_neg</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>          
-           Negative Positive
-  Negative       21        1
-  Positive       11       89</code></pre>
+<pre><code> [1] "Drug_CARBOPLATIN"                                
+ [2] "Drug_DOCETAXEL"                                  
+ [3] "Drug_Epirubicoin"                                
+ [4] "Drug_HERCEPTIN"                                  
+ [5] "Drug_Lapatinib"                                  
+ [6] "Drug_Not.otherwise.specified"                    
+ [7] "Drug_Paclitaxel..Protein.Bound."                 
+ [8] "Drug_Poly.E"                                     
+ [9] "Drug_TRASTUZUMAB"                                
+[10] "Drug_doxorubicin.cyclophosphamid"                
+[11] "Drug_lapatinib"                                  
+[12] "Drug_taxol.adriamycin.cyclophosphamide.herceptin"</code></pre>
 </div>
 </div>
+</section>
+<section id="frequency-statistics-for-remaining-drugs" class="level3">
+<h3 class="anchored" data-anchor-id="frequency-statistics-for-remaining-drugs">Frequency statistics for remaining drugs</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>selected_drug_dataset <span class="ot">&lt;-</span> hr_her2_treatment_data[,drug_columns]</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>selected_drug_dataset <span class="ot">&lt;-</span> selected_drug_dataset[,<span class="sc">!</span>(<span class="fu">names</span>(selected_drug_dataset) <span class="sc">%in%</span> <span class="fu">c</span>(zero_variance_cols,zero_variance_cols_pos,zero_variance_cols_neg))]</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(selected_drug_dataset, <span class="st">"data/selected_drugs_subset.tsv"</span>, <span class="at">sep=</span><span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">quote =</span> F, <span class="at">row.names =</span> F)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>drug_props <span class="ot">&lt;-</span> <span class="fu">colSums</span>(selected_drug_dataset) <span class="sc">/</span> <span class="fu">nrow</span>(selected_drug_dataset)<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(drug_props) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(selected_drug_dataset)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(drug_props, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  Drug_Tamoxifen                     Drug_Cytoxan 
+                      24.3432574                       19.0893170 
+           Drug_Cyclophosphamide                    Drug_Arimidex 
+                      14.5359019                       12.9597198 
+                Drug_Doxorubicin                  Drug_Adriamycin 
+                      12.0840630                       11.0332750 
+                 Drug_Paclitaxel                    Drug_Taxotere 
+                       9.6322242                        9.2819615 
+                Drug_Anastrozole                   Drug_Docetaxel 
+                       7.5306480                        6.6549912 
+             Drug_5.Fluorouracil                       Drug_Taxol 
+                       5.6042032                        5.4290718 
+                  Drug_Letrozole                  Drug_Epirubicin 
+                       4.7285464                        4.5534151 
+           Drug_CYCLOPHOSPHAMIDE                  Drug_Exemestane 
+                       3.5026270                        3.5026270 
+                     Drug_Femara                Drug_Fluorouracil 
+                       2.9772329                        2.9772329 
+                Drug_DOXORUBICIN                   Drug_Herceptin 
+                       2.6269702                        2.4518389 
+                 Drug_PACLITAXEL                 Drug_Trastuzumab 
+                       2.4518389                        2.4518389 
+                   Drug_ARIMIDEX                 Drug_Carboplatin 
+                       1.9264448                        1.9264448 
+               Drug_Methotrexate                   Drug_tamoxifen 
+                       1.7513135                        1.7513135 
+                   Drug_Aromasin              Drug_Cyclophosphane 
+                       1.5761821                        1.5761821 
+                  Drug_TAMOXIFEN            Drug_cyclophosphamide 
+                       1.5761821                        1.5761821 
+                    Drug_Zoladex                    Drug_arimidex 
+                       1.4010508                        0.8756567 
+                 Drug_ADRIAMYCIN                     Drug_CYTOXAN 
+                       0.7005254                        0.7005254 
+                      Drug_TAXOL Drug_adriamycin.cyclophosphamide 
+                       0.7005254                        0.7005254 
+                      Drug_taxol                    Drug_Abraxane 
+                       0.7005254                        0.5253940 
+     Drug_Arimidex..Anastrozole.                  Drug_Chemo..NOS 
+                       0.5253940                        0.5253940 
+            Drug_Zoledronic.acid                      Drug_Zometa 
+                       0.5253940                        0.5253940 
+                Drug_doxorubicin                  Drug_paclitaxel 
+                       0.5253940                        0.5253940 
+                       Drug_5.FU                      Drug_Lupron 
+                       0.3502627                        0.3502627 
+                   Drug_NEULASTA                          Drug_ac 
+                       0.3502627                        0.3502627 
+                  Drug_herceptin 
+                       0.3502627 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>missing_data_only <span class="ot">&lt;-</span> hr_her2_treatment_data <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(columns_with_missing))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#select(where(~ any(is.na(.))))</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_upset</span>(missing_data_only, </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">nsets =</span> <span class="fu">length</span>(columns_with_missing), </span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">text.scale =</span> <span class="fl">1.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
+ℹ Please use tidy evaluation idioms with `aes()`.
+ℹ See also `vignette("ggplot2-in-packages")` for more information.
+ℹ The deprecated feature was likely used in the UpSetR package.
+  Please report the issue at &lt;https://github.com/hms-dbmi/UpSetR/issues&gt;.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.
+ℹ The deprecated feature was likely used in the UpSetR package.
+  Please report the issue at &lt;https://github.com/hms-dbmi/UpSetR/issues&gt;.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.
+ℹ Please use the `linewidth` argument instead.
+ℹ The deprecated feature was likely used in the UpSetR package.
+  Please report the issue at &lt;https://github.com/hms-dbmi/UpSetR/issues&gt;.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>remove_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"retrospective_collection"</span>,</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"last_contact_days_to"</span>,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"micromet_detection_by_ihc"</span>,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"lymph_nodes_examined_count"</span>,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"lymph_nodes_examined_he_count"</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"her2_ihc_score"</span>,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Age_in_Years"</span>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>columns_with_missing_keep <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(columns_with_missing, remove_columns)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>missing_data_only <span class="ot">&lt;-</span> hr_her2_treatment_data <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(columns_with_missing_keep))</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_upset</span>(missing_data_only, </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">nsets =</span> <span class="fu">length</span>(columns_with_missing_keep), </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">text.scale =</span> <span class="fl">1.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 </section>
 </section>
 

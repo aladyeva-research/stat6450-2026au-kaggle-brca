@@ -5,35 +5,33 @@ format: html
 editor: visual
 ---
 
-## Kaggle Breast Cancer Project
+# Kaggle Breast Cancer Project
 
 ```{r}
 setwd('/Users/aladyeva.e/Library/CloudStorage/GoogleDrive-aladyeva.ekaterina@gmail.com/My Drive/OSU/PhD/Classes/STAT6450/Project/Kaggle_Breast_Cancer')
 ```
 
 ```{r}
-suppressPackageStartupMessages(
+suppressPackageStartupMessages({
   library(dplyr)
-)
+  library(stringr)
+  library(ggplot2)
+  library(naniar)
+})
 ```
 
 ```{r}
 #! label: "get-data"
-clinical_data <- read.csv("data/Clinical_Demographic_Data.csv")
 treatment_data <- read.csv("data/Clinical_Treatment_Data.csv")
 ```
 
 ```{r}
-colnames(clinical_data)
+all_meta_columns <- colnames(treatment_data)
+drug_columns <- all_meta_columns[grepl("^Drug",all_meta_columns)]
 ```
 
 ```{r}
-colnames(treatment_data)
-```
-
-
-### Cancer subtype statistics
-```{r}
+#| label: subtype-annotation
 treatment_data$cancer_subtype <- case_when(((treatment_data$er_status_by_ihc == "Positive") | (treatment_data$pr_status_by_ihc == "Positive")) & (treatment_data$her2_status_by_ihc == "Positive") ~ "HR+/HER2+",
                                         ((treatment_data$er_status_by_ihc == "Positive") | (treatment_data$pr_status_by_ihc == "Positive")) & (treatment_data$her2_status_by_ihc == "Negative") ~ "HR+/HER2-",
                                         treatment_data$her2_status_by_ihc == "Positive" ~ "HER2+(HR-)",
@@ -41,10 +39,11 @@ treatment_data$cancer_subtype <- case_when(((treatment_data$er_status_by_ihc == 
                                         .default = "Unknown")
 ```
 
+## Cancer subtype statistics
+
 ```{r}
 table(treatment_data$er_status_by_ihc)
 ```
-
 
 ```{r}
 table(treatment_data$er_status_by_ihc, treatment_data$pr_status_by_ihc)
@@ -54,39 +53,103 @@ table(treatment_data$er_status_by_ihc, treatment_data$pr_status_by_ihc)
 table(treatment_data$cancer_subtype)
 ```
 
-
 ```{r}
 hr_her2_treatment_data <- treatment_data %>% filter(cancer_subtype %in% c("HR+/HER2-", "HR+/HER2+"))
+write.table(hr_her2_treatment_data, "data/hr_her2_cancer_subset.tsv", sep="\t", quote = F, row.names = F)
 ```
 
+## Features QC
 
+### Missing values per column
 ```{r}
-merged_data <- clinical_data %>% 
-  inner_join(hr_her2_treatment_data, 
-            by = c("Patient_ID"="bcr_patient_barcode"), 
-            suffix = c("_clinic","_treat"))
-```
-
-```{r}
-hr_her2_treatment_data %>% left_join(clinical_data, , 
-            by = c("bcr_patient_barcode" = "Patient_ID"), 
-            suffix = c("_clinic","_treat")) %>% filter(is.na(primary_site))
-```
-
-
-```{r}
-table(merged_data$cancer_subtype)
+hr_her2_treatment_data <- hr_her2_treatment_data %>% 
+  mutate(across(where(is.character), str_trim))
+hr_her2_treatment_data[hr_her2_treatment_data == ""] <- NA
 ```
 
 ```{r}
-table(merged_data$er_status_by_ihc)
+missing_values <- colSums(is.na(hr_her2_treatment_data))
+missing_props <- round(missing_values/nrow(hr_her2_treatment_data)*100,2)
+columns_with_missing <- names(missing_props[missing_props > 0])
+missing_data <- data.frame(values = missing_values, props = missing_props)
+missing_data %>% filter(props>0) %>% arrange(desc(props))
 ```
 
+### Zero variance columns
+```{r}
+# Count unique values per column (ignoring NAs)
+unique_counts <- sapply(hr_her2_treatment_data, function(x) length(unique(na.omit(x))))
+# Identify columns with 1 or fewer unique values
+zero_variance_cols <- names(unique_counts[unique_counts <= 1])
+```
+
+### Quasi-complete columns
 
 ```{r}
-table(merged_data$er_status_by_ihc, merged_data$pr_status_by_ihc)
+her2_pos_subset <- hr_her2_treatment_data[hr_her2_treatment_data$cancer_subtype == "HR+/HER2+",
+                                          !(names(hr_her2_treatment_data) %in% zero_variance_cols)]
 ```
 
+```{r}
+unique_counts <- sapply(her2_pos_subset, function(x) length(unique(na.omit(x))))
+# Identify columns with 1 or fewer unique values
+zero_variance_cols_pos <- names(unique_counts[unique_counts <= 1])
+zero_variance_cols_pos
+```
 
+```{r}
+her2_neg_subset <- hr_her2_treatment_data[hr_her2_treatment_data$cancer_subtype == "HR+/HER2-",
+                                          !(names(hr_her2_treatment_data) %in% c(zero_variance_cols,zero_variance_cols_pos))]
+```
+
+```{r}
+unique_counts <- sapply(her2_neg_subset, function(x) length(unique(na.omit(x))))
+# Identify columns with 1 or fewer unique values
+zero_variance_cols_neg <- names(unique_counts[unique_counts <= 1])
+zero_variance_cols_neg
+```
+
+### Frequency statistics for remaining drugs
+```{r}
+selected_drug_dataset <- hr_her2_treatment_data[,drug_columns]
+selected_drug_dataset <- selected_drug_dataset[,!(names(selected_drug_dataset) %in% c(zero_variance_cols,zero_variance_cols_pos,zero_variance_cols_neg))]
+write.table(selected_drug_dataset, "data/selected_drugs_subset.tsv", sep="\t", quote = F, row.names = F)
+```
+
+```{r}
+drug_props <- colSums(selected_drug_dataset) / nrow(selected_drug_dataset)*100
+names(drug_props) <- colnames(selected_drug_dataset)
+sort(drug_props, decreasing = TRUE)
+```
+
+```{r, fig.height=12}
+missing_data_only <- hr_her2_treatment_data %>%
+  select(all_of(columns_with_missing))
+  #select(where(~ any(is.na(.))))
+
+gg_miss_upset(missing_data_only, 
+              nsets = length(columns_with_missing), 
+              text.scale = 1.2)
+```
+
+```{r}
+remove_columns <- c("retrospective_collection",
+                    "last_contact_days_to",
+                    "micromet_detection_by_ihc",
+                    "lymph_nodes_examined_count",
+                    "lymph_nodes_examined_he_count",
+                    "her2_ihc_score",
+                    "Age_in_Years")
+columns_with_missing_keep <- setdiff(columns_with_missing, remove_columns)
+```
+
+```{r, fig.height=8}
+missing_data_only <- hr_her2_treatment_data %>%
+  select(all_of(columns_with_missing_keep))
+
+gg_miss_upset(missing_data_only, 
+              nsets = length(columns_with_missing_keep), 
+              text.scale = 1.2)
+```
 
 

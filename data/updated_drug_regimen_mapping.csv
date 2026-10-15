@@ -1,0 +1,50 @@
+Original_Column_Name,Generic_Name,Part_of_AC_Regimen,Part_of_ACT_Regimen,Administered_Taxane,Prescription_Frequency,Prescription_Proportion
+Drug_Arimidex,Anastrozole,FALSE,FALSE,No,74,12.95971979
+Drug_Anastrozole,Anastrozole,FALSE,FALSE,No,43,7.530647986
+Drug_ARIMIDEX,Anastrozole,FALSE,FALSE,No,11,1.926444834
+Drug_arimidex,Anastrozole,FALSE,FALSE,No,5,0.875656743
+Drug_Arimidex..Anastrozole.,Anastrozole,FALSE,FALSE,No,3,0.525394046
+Drug_Carboplatin,Carboplatin,FALSE,FALSE,No,11,1.926444834
+Drug_Cytoxan,Cyclophosphamide,TRUE,TRUE,Yes,109,19.08931699
+Drug_Cyclophosphamide,Cyclophosphamide,TRUE,TRUE,Yes,83,14.53590193
+Drug_CYCLOPHOSPHAMIDE,Cyclophosphamide,TRUE,TRUE,No,20,3.50262697
+Drug_cyclophosphamide,Cyclophosphamide,TRUE,TRUE,Yes,9,1.576182137
+Drug_Cyclophosphane,Cyclophosphamide,TRUE,TRUE,No,9,1.576182137
+Drug_CYTOXAN,Cyclophosphamide,TRUE,TRUE,Yes,4,0.700525394
+Drug_Taxotere,Docetaxel,FALSE,TRUE,No,53,9.281961471
+Drug_Docetaxel,Docetaxel,FALSE,TRUE,No,38,6.654991243
+Drug_Doxorubicin,Doxorubicin,TRUE,TRUE,No,69,12.08406305
+Drug_Adriamycin,Doxorubicin,TRUE,TRUE,No,63,11.03327496
+Drug_DOXORUBICIN,Doxorubicin,TRUE,TRUE,No,15,2.626970228
+Drug_ADRIAMYCIN,Doxorubicin,TRUE,TRUE,No,4,0.700525394
+Drug_doxorubicin,Doxorubicin,TRUE,TRUE,No,3,0.525394046
+Drug_adriamycin.cyclophosphamide,Doxorubicin + Cyclophosphamide,TRUE,TRUE,Yes,4,0.700525394
+Drug_ac,Doxorubicin + Cyclophosphamide,TRUE,TRUE,No,2,0.350262697
+Drug_Epirubicin,Epirubicin,FALSE,FALSE,No,26,4.553415061
+Drug_Exemestane,Exemestane,FALSE,FALSE,No,20,3.50262697
+Drug_Aromasin,Exemestane,FALSE,FALSE,No,9,1.576182137
+Drug_5.Fluorouracil,Fluorouracil,FALSE,FALSE,No,32,5.604203152
+Drug_Fluorouracil,Fluorouracil,FALSE,FALSE,No,17,2.977232925
+Drug_5.FU,Fluorouracil,FALSE,FALSE,No,2,0.350262697
+Drug_Zoladex,Goserelin,FALSE,FALSE,No,8,1.401050788
+Drug_Letrozole,Letrozole,FALSE,FALSE,No,27,4.72854641
+Drug_Femara,Letrozole,FALSE,FALSE,No,17,2.977232925
+Drug_Lupron,Leuprolide,FALSE,FALSE,No,2,0.350262697
+Drug_Methotrexate,Methotrexate,FALSE,FALSE,No,10,1.751313485
+Drug_Chemo..NOS,Not Otherwise Specified,FALSE,FALSE,No,3,0.525394046
+Drug_Paclitaxel,Paclitaxel,FALSE,TRUE,Yes,55,9.632224168
+Drug_Taxol,Paclitaxel,FALSE,TRUE,Yes,31,5.429071804
+Drug_PACLITAXEL,Paclitaxel,FALSE,TRUE,No,14,2.451838879
+Drug_taxol,Paclitaxel,FALSE,TRUE,No,4,0.700525394
+Drug_TAXOL,Paclitaxel,FALSE,TRUE,No,4,0.700525394
+Drug_paclitaxel,Paclitaxel,FALSE,TRUE,No,3,0.525394046
+Drug_Abraxane,Paclitaxel (protein-bound),FALSE,TRUE,No,3,0.525394046
+Drug_NEULASTA,Pegfilgrastim,FALSE,FALSE,No,2,0.350262697
+Drug_Tamoxifen,Tamoxifen,FALSE,FALSE,Yes,139,24.34325744
+Drug_tamoxifen,Tamoxifen,FALSE,FALSE,No,10,1.751313485
+Drug_TAMOXIFEN,Tamoxifen,FALSE,FALSE,Yes,9,1.576182137
+Drug_Trastuzumab,Trastuzumab,FALSE,FALSE,No,14,2.451838879
+Drug_Herceptin,Trastuzumab,FALSE,FALSE,No,14,2.451838879
+Drug_herceptin,Trastuzumab,FALSE,FALSE,No,2,0.350262697
+Drug_Zoledronic.acid,Zoledronic acid,FALSE,FALSE,No,3,0.525394046
+Drug_Zometa,Zoledronic acid,FALSE,FALSE,No,3,0.525394046
