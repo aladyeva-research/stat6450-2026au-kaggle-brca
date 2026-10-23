@@ -1,0 +1,19 @@
+feature,label,encoded_term,coefficient_per_training_SD,coefficient_original_units,penalized_odds_ratio,selected
+age_at_diagnosis_years,Age at diagnosis,age_at_diagnosis_years,0.0,0.0,1.0,False
+gender,Sex/gender,gender_infrequent_sklearn,0.004298421561798242,0.036571765248821234,1.0372487397606664,True
+race,Race,race_BLACK OR AFRICAN AMERICAN,0.0,0.0,1.0,False
+race,Race,race_Missing,0.11443058637560481,0.3262998513118969,1.3858308497767973,True
+race,Race,race_WHITE,0.0,0.0,1.0,False
+ethnicity,Ethnicity,ethnicity_Missing,0.0,0.0,1.0,False
+ethnicity,Ethnicity,ethnicity_NOT HISPANIC OR LATINO,0.0,0.0,1.0,False
+menopause_clean,Menopause status,menopause_clean_Peri,0.0,0.0,1.0,False
+menopause_clean,Menopause status,menopause_clean_Post,0.0,0.0,1.0,False
+menopause_clean,Menopause status,menopause_clean_Pre,0.0,0.0,1.0,False
+stage_group,Pathologic stage,stage_group_II,0.0,0.0,1.0,False
+stage_group,Pathologic stage,stage_group_III,0.0,0.0,1.0,False
+stage_group,Pathologic stage,stage_group_infrequent_sklearn,0.0,0.0,1.0,False
+histological_type,Histology,histological_type_Infiltrating Lobular Carcinoma,0.0,0.0,1.0,False
+histological_type,Histology,histological_type_Mixed Histology (please specify),0.0,0.0,1.0,False
+histological_type,Histology,histological_type_Mucinous Carcinoma,-0.11092443247631573,-0.7436602153410389,0.4753707679418808,True
+histological_type,Histology,"histological_type_Other, specify",0.0,0.0,1.0,False
+histological_type,Histology,histological_type_infrequent_sklearn,0.0,0.0,1.0,False

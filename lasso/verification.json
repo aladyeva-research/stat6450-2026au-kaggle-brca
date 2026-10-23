@@ -1,0 +1,8 @@
+{
+  "patient_count": 571,
+  "independent_predictions_per_patient": 1,
+  "saved_coefficients_reproduce_probabilities": true,
+  "saved_oof_metrics_recomputed": true,
+  "final_models_converged": true,
+  "L1_penalty_verified": true
+}

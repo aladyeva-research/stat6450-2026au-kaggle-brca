@@ -1,0 +1,19 @@
+{
+  "conclusion": "Only three encoded terms survive, with weak and unstable predictive evidence.",
+  "archetype": "quantitative grid; single feature-comparison panel",
+  "backend": "Python matplotlib",
+  "width_mm": 183,
+  "height_mm": 137,
+  "data_exclusions_for_plot": 0,
+  "input_terms": 18,
+  "displayed_features": 7,
+  "aggregation": "maximum absolute standardized coefficient per original feature",
+  "uncertainty": "point coefficients only; no fabricated intervals",
+  "exports": [
+    "PNG 300 dpi",
+    "SVG editable text",
+    "PDF TrueType fonts"
+  ],
+  "source_commit": "31c7670142c407d44f071534725340a6faf95068",
+  "accepted_export_warnings": "300 dpi PNG is a chat/report preview; editable SVG/PDF are supplied. No TIFF submission requested."
+}

@@ -1,0 +1,312 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+    <title>LASSO logistic regression: HER2 status</title>
+    <style>body{font:17px/1.55 system-ui,sans-serif;max-width:1080px;margin:40px auto;padding:0 24px;color:#172331}
+    h1,h2{line-height:1.2}table{border-collapse:collapse;width:100%;font-size:14px;margin:20px 0}
+    td,th{padding:9px;text-align:left;border-bottom:1px solid #ccd3da}th{background:#edf2f7}
+    .scroll{overflow-x:auto}code{background:#edf2f7;padding:2px 5px}a{color:#075d9c}</style>
+    <h1>LASSO logistic regression for HER2 status</h1>
+    <p>Exploratory feature selection among HR-positive breast cancer patients.
+    Outcome: HER2-positive (1) versus HER2-negative (0). Sample: 571 patients,
+    126 positive and 445 negative (22.1% positive).</p>
+    <p>Source: <a href="https://github.com/aladyeva-research/stat6450-2026au-kaggle-brca/tree/31c7670142c407d44f071534725340a6faf95068">
+    GitHub commit 31c7670</a>. Both raw clinical files match the earlier cleaning snapshot.
+    The updated EDA performs outcome-dependent drug filtering; that filtering is not reused here.</p>
+    <h2>Feature selection</h2><p>Seven candidate features were specified before this run:
+    age, sex/gender, race, ethnicity, menopause status, pathologic stage and histology.
+    This diagnostic-profile model does not estimate the future probability of developing breast cancer.
+    Stage and histology require diagnostic workup; availability at a real prediction time must be established.</p>
+    <p>Receptor measurements and subtype are excluded because they reveal the outcome or define the cohort.
+    Drugs, treatment procedures, follow-up and vital status are excluded because their timing or relation
+    to HER2 could create leakage. IDs, source-site identifiers and duplicate ages are excluded.
+    No univariable p-value screening is used.</p>
+    <h2>Methods</h2><p>LASSO logistic regression applies an L1 penalty to the coefficients and can
+    set some to zero. Numeric age is median-imputed where needed. Missing categorical values are labeled;
+    categories with fewer than 10 training observations are pooled into an infrequent group. Categorical
+    features use dummy coding with a dropped reference, and all encoded terms are standardized using
+    training data. The intercept is unpenalized; no outcome class weighting or resampling is applied.</p>
+    <p>Each of five stratified outer folds is evaluated after tuning C on five inner folds by mean
+    log loss. Imputation, pooling, encoding and scaling are fitted inside each training fold.
+    Smaller C means stronger regularization. The 17-value C grid spans 0.0001 to 100.
+    We compare the minimum-loss choice with the strongest penalty within one standard error of
+    minimum loss. The latter is the simpler primary selection rule; the minimum-loss fit is reported
+    as a comparison. Final models are then tuned and fitted on the full sample for feature reporting.</p>
+    <h2>Results</h2><p>Full-sample minimum-loss C = 0.1;
+    one-standard-error C = 0.1.</p>
+    <p><strong>The model shows weak discrimination in this first run.</strong>
+    The primary nested-CV AUC is 0.514 (approximate conditional 95% interval
+    0.460 to 0.571).
+    Its Brier score is 0.1720, versus 0.1720 for
+    the prevalence baseline. These results do not establish useful individual prediction.</p>
+    <p>Minimum-loss fit selects 3 encoded terms from:
+    Histology, Race, Sex/gender.
+    The simpler one-standard-error fit selects 3 terms from:
+    Histology, Race, Sex/gender.</p>
+    <p>For this snapshot, the selected terms are the male category (8 patients), missing race
+    (82 patients), and mucinous histology (13 patients, none HER2-positive). Thus the race result
+    concerns missingness, not evidence that a particular racial group has higher risk. Both
+    sex/gender and histology terms involve small categories. Their selection is unstable across
+    outer fits. Age, menopause status, stage and ethnicity are zeroed out in this specified fit;
+    this does not establish that they have no association in the population.</p>
+    <div class="scroll"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>feature</th>
+      <th>selected_level</th>
+      <th>patients_in_level</th>
+      <th>HER2_positive_in_level</th>
+      <th>standardized_coefficient</th>
+      <th>selected_in_outer_fits_of_5</th>
+      <th>interpretation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Sex/gender</td>
+      <td>Rare category: MALE</td>
+      <td>8</td>
+      <td>3</td>
+      <td>0.0043</td>
+      <td>0</td>
+      <td>Very small category</td>
+    </tr>
+    <tr>
+      <td>Race</td>
+      <td>Missing</td>
+      <td>82</td>
+      <td>26</td>
+      <td>0.1144</td>
+      <td>1</td>
+      <td>Missing-data pattern, not a measured race effect</td>
+    </tr>
+    <tr>
+      <td>Histology</td>
+      <td>Mucinous Carcinoma</td>
+      <td>13</td>
+      <td>0</td>
+      <td>-0.1109</td>
+      <td>1</td>
+      <td>Very small category</td>
+    </tr>
+  </tbody>
+</table></div>
+    <h3>Nested cross-validation performance</h3>
+    <p>Table 1 evaluates predictions made when each patient was outside all model fitting and tuning.
+    AUC measures discrimination; lower log loss and Brier score indicate better probability predictions.
+    The baseline predicts the training-fold prevalence for everyone in its validation fold.</p>
+    <div class="scroll"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>model</th>
+      <th>auc</th>
+      <th>log_loss</th>
+      <th>brier_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>minimum</td>
+      <td>0.5154</td>
+      <td>0.5270</td>
+      <td>0.1718</td>
+    </tr>
+    <tr>
+      <td>one_se</td>
+      <td>0.5141</td>
+      <td>0.5279</td>
+      <td>0.1720</td>
+    </tr>
+    <tr>
+      <td>prevalence_baseline</td>
+      <td>0.4968</td>
+      <td>0.5278</td>
+      <td>0.1720</td>
+    </tr>
+  </tbody>
+</table></div>
+    <p>Approximate 95% intervals are supplied in nested_cv_performance.csv using 1,000 patient resamples
+    of the fixed out-of-fold predictions. They are conditional intervals, not full repeated-training
+    uncertainty. Outer-fold variation is supplied separately. No external validation has been done.</p>
+    <h3>Nonzero terms: minimum-loss fit</h3>
+    <p>Table 2 shows penalized coefficients per training standard deviation. Signs indicate the
+    direction conditional on the other encoded predictors. Coefficient size is not a causal impact
+    ranking. Odds ratios, reference encodings and the complete zero/nonzero coefficients are in the
+    accompanying CSV/JSON files. Penalized odds ratios are shrunken estimates, without significance claims.</p>
+    <div class="scroll"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>label</th>
+      <th>encoded_term</th>
+      <th>coefficient_per_training_SD</th>
+      <th>penalized_odds_ratio</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Sex/gender</td>
+      <td>gender_infrequent_sklearn</td>
+      <td>0.0043</td>
+      <td>1.0372</td>
+    </tr>
+    <tr>
+      <td>Race</td>
+      <td>race_Missing</td>
+      <td>0.1144</td>
+      <td>1.3858</td>
+    </tr>
+    <tr>
+      <td>Histology</td>
+      <td>histological_type_Mucinous Carcinoma</td>
+      <td>-0.1109</td>
+      <td>0.4754</td>
+    </tr>
+  </tbody>
+</table></div>
+    <h3>Nonzero terms: simpler one-standard-error fit</h3>
+    <div class="scroll"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>label</th>
+      <th>encoded_term</th>
+      <th>coefficient_per_training_SD</th>
+      <th>penalized_odds_ratio</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Sex/gender</td>
+      <td>gender_infrequent_sklearn</td>
+      <td>0.0043</td>
+      <td>1.0372</td>
+    </tr>
+    <tr>
+      <td>Race</td>
+      <td>race_Missing</td>
+      <td>0.1144</td>
+      <td>1.3858</td>
+    </tr>
+    <tr>
+      <td>Histology</td>
+      <td>histological_type_Mucinous Carcinoma</td>
+      <td>-0.1109</td>
+      <td>0.4754</td>
+    </tr>
+  </tbody>
+</table></div>
+    <h3>Selection across the five outer training fits</h3>
+    <p>Table 3 shows how frequently at least one level of a feature was selected. These are overlapping
+    training sets, not five independent studies or a formal bootstrap stability analysis.</p>
+    <div class="scroll"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>rule</th>
+      <th>feature</th>
+      <th>outer_fits_selected</th>
+      <th>outer_fit_selection_fraction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>minimum</td>
+      <td>Age at diagnosis</td>
+      <td>0</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>minimum</td>
+      <td>Ethnicity</td>
+      <td>0</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>minimum</td>
+      <td>Sex/gender</td>
+      <td>1</td>
+      <td>0.2000</td>
+    </tr>
+    <tr>
+      <td>minimum</td>
+      <td>Histology</td>
+      <td>3</td>
+      <td>0.6000</td>
+    </tr>
+    <tr>
+      <td>minimum</td>
+      <td>Menopause status</td>
+      <td>0</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>minimum</td>
+      <td>Race</td>
+      <td>3</td>
+      <td>0.6000</td>
+    </tr>
+    <tr>
+      <td>minimum</td>
+      <td>Pathologic stage</td>
+      <td>0</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>one_se</td>
+      <td>Age at diagnosis</td>
+      <td>0</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>one_se</td>
+      <td>Ethnicity</td>
+      <td>0</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>one_se</td>
+      <td>Sex/gender</td>
+      <td>0</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>one_se</td>
+      <td>Histology</td>
+      <td>1</td>
+      <td>0.2000</td>
+    </tr>
+    <tr>
+      <td>one_se</td>
+      <td>Menopause status</td>
+      <td>0</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>one_se</td>
+      <td>Race</td>
+      <td>1</td>
+      <td>0.2000</td>
+    </tr>
+    <tr>
+      <td>one_se</td>
+      <td>Pathologic stage</td>
+      <td>0</td>
+      <td>0.0000</td>
+    </tr>
+  </tbody>
+</table></div>
+    <h2>Interpretation and limitations</h2>
+    <p>Use the one-standard-error results as the initial parsimonious candidate set. Selection can
+    change with folds, encoding, correlated variables and the penalty rule. An omitted feature is
+    not proven irrelevant, and a selected feature is not proven statistically significant.
+    Individual category levels can be selected without retaining every level of the original variable.</p>
+    <p>The population excludes unresolved HER2 results, so selection bias is possible. Eight cohort
+    patients have age-source disagreements previously flagged; age_at_diagnosis remains the working
+    source. No nonlinear terms or interactions were considered. Categorical missingness and rare-level
+    pooling are exploratory choices. Calibration-bin summaries are provided for review; external
+    calibration and prospective utility remain unestablished. No post-selection ordinary p-values
+    or confidence intervals are presented.</p>
+    <h2>References and reproducibility</h2><p>Friedman, Hastie &amp; Tibshirani (2010),
+    <a href="https://doi.org/10.18637/jss.v033.i01">Regularization Paths for Generalized Linear Models via Coordinate Descent</a>.
+    Implementation uses scikit-learn 1.9.1 with the SAGA solver, rather than glmnet's coordinate descent.
+    <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html">Implementation documentation</a>.
+    <a href="https://www.bmj.com/content/386/bmj-2023-078276">Developing clinical prediction models: a step-by-step guide (2024)</a>.</p>
+    <p>Run <code>python lasso_logistic.py</code> from any directory. Seed: 6450.
+    Scripts, input hashes, versions, folds, tuning scores, coefficients, and out-of-fold predictions
+    are saved locally. GitHub is unchanged.</p></html>

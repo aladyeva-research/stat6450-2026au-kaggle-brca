@@ -1,0 +1,15 @@
+LASSO feature ranking for HER2 status among 571 HR-positive patients.
+Each bar is the maximum absolute standardized LASSO coefficient across encoded
+terms belonging to a feature, from the full-sample one-standard-error model
+(C=0.1). Signs indicate coefficient direction; categorical reference encodings
+are documented in encoding_reference.json. All seven candidates and all 18
+underlying terms were included in this aggregation. Four zero-score features
+are tied, not ordered by evidence. The displayed n values are category counts,
+not independent replication counts. Coefficients are shrunken point estimates;
+no p-values, confidence intervals, or causal claims are attached to this ranking.
+Penalty tuning used stratified five-fold cross-validation inside five outer
+validation folds. The nested-CV AUC is 0.514; the approximate conditional 95%
+interval is 0.460–0.571. Final-model selection was unstable across outer fits.
+Race corresponds to missing information, and the male and mucinous categories
+are small. Missing outcome records were excluded during cohort definition;
+no additional rows or features were removed for this figure.

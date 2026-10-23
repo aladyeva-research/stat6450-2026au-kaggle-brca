@@ -1,0 +1,8 @@
+feature,feature_label,strongest_encoded_term,signed_coefficient,rank_score,outer_fits_selected_of_5
+race,Race,race_Missing,0.1144305863756048,0.1144305863756048,1
+histological_type,Histology,histological_type_Mucinous Carcinoma,-0.1109244324763157,0.1109244324763157,1
+gender,Sex/gender,gender_infrequent_sklearn,0.0042984215617982,0.0042984215617982,0
+age_at_diagnosis_years,Age at diagnosis,age_at_diagnosis_years,0.0,0.0,0
+ethnicity,Ethnicity,ethnicity_Missing,0.0,0.0,0
+menopause_clean,Menopause status,menopause_clean_Peri,0.0,0.0,0
+stage_group,Pathologic stage,stage_group_II,0.0,0.0,0

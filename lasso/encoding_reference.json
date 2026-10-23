@@ -1,0 +1,140 @@
+{
+  "minimum": {
+    "gender": {
+      "training_categories": [
+        "FEMALE",
+        "MALE"
+      ],
+      "infrequent_categories": [
+        "MALE"
+      ],
+      "dropped_original_category": "FEMALE"
+    },
+    "race": {
+      "training_categories": [
+        "ASIAN",
+        "BLACK OR AFRICAN AMERICAN",
+        "Missing",
+        "WHITE"
+      ],
+      "infrequent_categories": [],
+      "dropped_original_category": "ASIAN"
+    },
+    "ethnicity": {
+      "training_categories": [
+        "HISPANIC OR LATINO",
+        "Missing",
+        "NOT HISPANIC OR LATINO"
+      ],
+      "infrequent_categories": [],
+      "dropped_original_category": "HISPANIC OR LATINO"
+    },
+    "menopause_clean": {
+      "training_categories": [
+        "Missing",
+        "Peri",
+        "Post",
+        "Pre"
+      ],
+      "infrequent_categories": [],
+      "dropped_original_category": "Missing"
+    },
+    "stage_group": {
+      "training_categories": [
+        "I",
+        "II",
+        "III",
+        "IV",
+        "Missing"
+      ],
+      "infrequent_categories": [
+        "IV",
+        "Missing"
+      ],
+      "dropped_original_category": "I"
+    },
+    "histological_type": {
+      "training_categories": [
+        "Infiltrating Ductal Carcinoma",
+        "Infiltrating Lobular Carcinoma",
+        "Metaplastic Carcinoma",
+        "Mixed Histology (please specify)",
+        "Mucinous Carcinoma",
+        "Other, specify"
+      ],
+      "infrequent_categories": [
+        "Metaplastic Carcinoma"
+      ],
+      "dropped_original_category": "Infiltrating Ductal Carcinoma"
+    }
+  },
+  "one_se": {
+    "gender": {
+      "training_categories": [
+        "FEMALE",
+        "MALE"
+      ],
+      "infrequent_categories": [
+        "MALE"
+      ],
+      "dropped_original_category": "FEMALE"
+    },
+    "race": {
+      "training_categories": [
+        "ASIAN",
+        "BLACK OR AFRICAN AMERICAN",
+        "Missing",
+        "WHITE"
+      ],
+      "infrequent_categories": [],
+      "dropped_original_category": "ASIAN"
+    },
+    "ethnicity": {
+      "training_categories": [
+        "HISPANIC OR LATINO",
+        "Missing",
+        "NOT HISPANIC OR LATINO"
+      ],
+      "infrequent_categories": [],
+      "dropped_original_category": "HISPANIC OR LATINO"
+    },
+    "menopause_clean": {
+      "training_categories": [
+        "Missing",
+        "Peri",
+        "Post",
+        "Pre"
+      ],
+      "infrequent_categories": [],
+      "dropped_original_category": "Missing"
+    },
+    "stage_group": {
+      "training_categories": [
+        "I",
+        "II",
+        "III",
+        "IV",
+        "Missing"
+      ],
+      "infrequent_categories": [
+        "IV",
+        "Missing"
+      ],
+      "dropped_original_category": "I"
+    },
+    "histological_type": {
+      "training_categories": [
+        "Infiltrating Ductal Carcinoma",
+        "Infiltrating Lobular Carcinoma",
+        "Metaplastic Carcinoma",
+        "Mixed Histology (please specify)",
+        "Mucinous Carcinoma",
+        "Other, specify"
+      ],
+      "infrequent_categories": [
+        "Metaplastic Carcinoma"
+      ],
+      "dropped_original_category": "Infiltrating Ductal Carcinoma"
+    }
+  }
+}

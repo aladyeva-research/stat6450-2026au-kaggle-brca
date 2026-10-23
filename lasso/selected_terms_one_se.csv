@@ -1,0 +1,4 @@
+feature,label,encoded_term,coefficient_per_training_SD,coefficient_original_units,penalized_odds_ratio,selected
+gender,Sex/gender,gender_infrequent_sklearn,0.004298421561798242,0.036571765248821234,1.0372487397606664,True
+race,Race,race_Missing,0.11443058637560481,0.3262998513118969,1.3858308497767973,True
+histological_type,Histology,histological_type_Mucinous Carcinoma,-0.11092443247631573,-0.7436602153410389,0.4753707679418808,True

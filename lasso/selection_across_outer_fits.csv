@@ -1,0 +1,15 @@
+rule,feature,outer_fits_selected,outer_fit_selection_fraction
+minimum,age_at_diagnosis_years,0,0.0
+minimum,ethnicity,0,0.0
+minimum,gender,1,0.2
+minimum,histological_type,3,0.6
+minimum,menopause_clean,0,0.0
+minimum,race,3,0.6
+minimum,stage_group,0,0.0
+one_se,age_at_diagnosis_years,0,0.0
+one_se,ethnicity,0,0.0
+one_se,gender,0,0.0
+one_se,histological_type,1,0.2
+one_se,menopause_clean,0,0.0
+one_se,race,1,0.2
+one_se,stage_group,0,0.0

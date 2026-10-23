@@ -1,0 +1,4 @@
+feature,selected_level,patients_in_level,HER2_positive_in_level,standardized_coefficient,selected_in_outer_fits_of_5,interpretation
+Sex/gender,Rare category: MALE,8,3,0.0042984215617982,0,Very small category
+Race,Missing,82,26,0.1144305863756048,1,"Missing-data pattern, not a measured race effect"
+Histology,Mucinous Carcinoma,13,0,-0.1109244324763157,1,Very small category

@@ -1,0 +1,8 @@
+feature,label,missing_n,unique_nonmissing
+age_at_diagnosis_years,Age at diagnosis,0,61
+gender,Sex/gender,0,2
+race,Race,82,3
+ethnicity,Ethnicity,127,2
+menopause_clean,Menopause status,47,3
+stage_group,Pathologic stage,9,4
+histological_type,Histology,0,6

@@ -1,0 +1,86 @@
+{
+  "source_commit": "31c7670142c407d44f071534725340a6faf95068",
+  "source_raw_files_unchanged_from_cleaning_snapshot": true,
+  "n": 571,
+  "positive_n": 126,
+  "negative_n": 445,
+  "prevalence": 0.22066549912434325,
+  "candidate_features": [
+    "age_at_diagnosis_years",
+    "gender",
+    "race",
+    "ethnicity",
+    "menopause_clean",
+    "stage_group",
+    "histological_type"
+  ],
+  "C_choices": {
+    "minimum": 0.1,
+    "one_se": 0.1
+  },
+  "seed": 6450,
+  "outer_folds": 5,
+  "inner_folds": 5,
+  "selected_features": {
+    "minimum": [
+      "Histology",
+      "Race",
+      "Sex/gender"
+    ],
+    "one_se": [
+      "Histology",
+      "Race",
+      "Sex/gender"
+    ]
+  },
+  "selected_terms": {
+    "minimum": 3,
+    "one_se": 3
+  },
+  "performance": [
+    {
+      "model": "minimum",
+      "auc": 0.5154360620652755,
+      "log_loss": 0.5269674989542478,
+      "brier_score": 0.1717685186676834,
+      "auc_conditional_ci_low": 0.4585902917680095,
+      "log_loss_conditional_ci_low": 0.48417611565888186,
+      "brier_score_conditional_ci_low": 0.15278812469760994,
+      "auc_conditional_ci_high": 0.5721328647229776,
+      "log_loss_conditional_ci_high": 0.5725689298575366,
+      "brier_score_conditional_ci_high": 0.19203051107147384
+    },
+    {
+      "model": "one_se",
+      "auc": 0.5140895309434634,
+      "log_loss": 0.5278981708808838,
+      "brier_score": 0.172027196132301,
+      "auc_conditional_ci_low": 0.459599525161189,
+      "log_loss_conditional_ci_low": 0.4861205093049744,
+      "brier_score_conditional_ci_low": 0.15347757759163425,
+      "auc_conditional_ci_high": 0.5707040474737669,
+      "log_loss_conditional_ci_high": 0.5708030701041633,
+      "brier_score_conditional_ci_high": 0.19141936106818896
+    },
+    {
+      "model": "prevalence_baseline",
+      "auc": 0.4968253968253967,
+      "log_loss": 0.5277612041907913,
+      "brier_score": 0.17197643659682108,
+      "auc_conditional_ci_low": 0.45695017979633995,
+      "log_loss_conditional_ci_low": 0.48571121182922516,
+      "brier_score_conditional_ci_low": 0.15336485700243832,
+      "auc_conditional_ci_high": 0.5344022430522959,
+      "log_loss_conditional_ci_high": 0.574122065729118,
+      "brier_score_conditional_ci_high": 0.1925074892236477
+    }
+  ],
+  "versions": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "sklearn": "1.9.1",
+    "numpy": "2.3.5",
+    "pandas": "3.0.1",
+    "scipy": "1.18.1"
+  },
+  "input_sha256": "9044ed244f31544662683cb23fdc9786b7b1132a45cfe275a85b5e924350b863"
+}
